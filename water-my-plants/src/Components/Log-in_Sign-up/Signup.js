@@ -2,17 +2,18 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import * as yup from 'yup'
 import axios from 'axios'
+import Dashboard from '../Plants/Dashboard'
 import {LogInStyle, LogInHeader, H3one2, H3two2, Container2, Containerh3, Containerp, InputField2, Label, Input, Button, Error } from './LogInStyle'
 
 const initialForm = {
     username: '',
-    phone: '',
+    phoneNumber: '',
     password: '',
 }
 
 const initialFormErrors = {
     username: '',
-    phone: '',
+    phoneNumber: '',
     password: '',
 }
 
@@ -27,7 +28,7 @@ const formSchema = yup.object().shape({
         .string()
         .min(6, "Passwords must be at least 6 characters long.")
         .required("Password is required"),
-    phone: yup
+    phoneNumber: yup
         .string()
         .matches(phoneRegExp, 'Phone number is not valid')
         .required("Phone number is required")
@@ -36,8 +37,8 @@ const formSchema = yup.object().shape({
 
 
 
-export default function LogInForm() {
-    const [user, setUser] = useState([])
+export default function LogInForm(props) {
+    const { userInfo, setUserInfo } = props
     const [form, setForm] = useState(initialForm)
     const [formError, setFormError] = useState(initialFormErrors)
     const [disabled, setDisabled] = useState(initialDisabled)
@@ -74,9 +75,9 @@ export default function LogInForm() {
         axios.post('https://jswatermyplants-backend.herokuapp.com/api/auth/register', form)
           .then(res => {
             console.log(res)
-            setUser(res.data, ...user)
+            setUserInfo(res.data, ...userInfo)
             setForm(initialForm)
-            // history.push("/")
+            history.push("/dashboard")
           })
         .catch((err => {
           console.log(err)
@@ -87,6 +88,7 @@ export default function LogInForm() {
         formSchema.isValid(form)
           .then(valid => setDisabled(!valid))
       }, [form])
+
 
     return(
         <LogInStyle className="login-form" onSubmit={handleSubmit}>
@@ -125,16 +127,17 @@ export default function LogInForm() {
                 Phone
                 <Input 
                 type='number' 
-                name='phone' 
+                name='phoneNumber' 
                 placeholder='Enter phone number'
-                value={form.phone}
+                value={form.phoneNumber}
                 onChange={handleChange}
                 />
             </Label>
-            {formError.phone && <Error>{formError.phone}</Error>}
+            {formError.phoneNumber && <Error>{formError.phoneNumber}</Error>}
             <Button disabled={disabled} type='submit'>Sign Up</Button>
             </InputField2>
         </Container2>
     </LogInStyle>
+    
     )
 }

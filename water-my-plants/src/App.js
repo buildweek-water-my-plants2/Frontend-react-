@@ -6,6 +6,7 @@ import LogInForm from './Components/Log-in_Sign-up/LogInForm'
 import Signup from './Components/Log-in_Sign-up/Signup'
 import PrivateRoute from '../src/Utils/PrivateRoute';
 import PlantContext from '../src/Contexts/plantContext'
+import Dashboard from './Components/Plants/Dashboard';
 
 function App() {
   const [userInfo, setUserInfo] = useState([]);
@@ -22,13 +23,16 @@ function App() {
 
      <Navbar />
      <Switch>
+       <Route path='/dashboard'>
+         <Dashboard />
+       </Route>
 
       <Route path='/SignUp'>
-        <Signup />
+        <Signup userInfo={userInfo} setUserInfo={setUserInfo} />
       </Route>
 
       <Route path='/'>
-        <LogInForm />
+        <LogInForm userInfo={userInfo} setUserInfo={setUserInfo} />
       </Route>
 
      </Switch>

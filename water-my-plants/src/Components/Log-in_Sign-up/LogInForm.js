@@ -4,6 +4,7 @@ import * as yup from 'yup'
 import axios from 'axios'
 import Form from './Form'
 
+
 const initialForm = {
     username: '',
     password: '',
@@ -29,8 +30,9 @@ const formSchema = yup.object().shape({
 
 
 
-export default function LogInForm() {
-    const [user, setUser] = useState([])
+export default function LogInForm(props) {
+    const { userInfo, setUserInfo } = props
+
     const [form, setForm] = useState(initialForm)
     const [formError, setFormError] = useState(initialFormErrors)
     const [disabled, setDisabled] = useState(initialDisabled)
@@ -60,12 +62,12 @@ export default function LogInForm() {
 
       const handleSubmit = (e) => {
         e.preventDefault()
-        axios.post(' https://jswatermyplants-backend.herokuapp.com/api/auth/login', form)
+        axios.post('https://jswatermyplants-backend.herokuapp.com/api/auth/login', form)
           .then(res => {
-            console.log(res)
-            setUser(res.data, ...user)
+            // console.log(res)
+            setUserInfo(res.data, ...userInfo)
             setForm(initialForm)
-            // history.push("/")
+            history.push("/dashboard")
           })
         .catch((err => {
           console.log(err)
@@ -76,6 +78,7 @@ export default function LogInForm() {
         formSchema.isValid(form)
           .then(valid => setDisabled(!valid))
       }, [form])
+       console.log(userInfo)
 
     return(
         <div className="login">
@@ -86,7 +89,6 @@ export default function LogInForm() {
                formError={formError} 
                disabled={disabled}
             />
-
         </div>
     )
 }
