@@ -64,8 +64,8 @@ export default function LogInForm(props) {
         e.preventDefault()
         axios.post('https://jswatermyplants-backend.herokuapp.com/api/auth/login', form)
           .then(res => {
-            // console.log(res)
-            setUserInfo(res.data, ...userInfo)
+            console.log(res)
+            // setUserInfo(res.data, ...userInfo)
             setForm(initialForm)
             history.push("/dashboard")
           })

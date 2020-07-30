@@ -27,12 +27,12 @@ function App() {
          <Dashboard />
        </Route>
 
-      <Route path='/SignUp'>
-        <Signup userInfo={userInfo} setUserInfo={setUserInfo} />
+      <Route path='/SignIn'>
+        <LogInForm userInfo={userInfo} setUserInfo={setUserInfo} />
       </Route>
 
       <Route path='/'>
-        <LogInForm userInfo={userInfo} setUserInfo={setUserInfo} />
+        <Signup userInfo={userInfo} setUserInfo={setUserInfo} />
       </Route>
 
      </Switch>
