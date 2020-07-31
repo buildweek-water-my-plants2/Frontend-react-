@@ -31,13 +31,93 @@ const Button = styled.button`
 `;
 
 const deletePlant = (id, refreshPlant) => {
-    axiosWithAuth()
-      .delete(`/api/tickets/${user_Id}`)
-      .then((res) => {
-        console.log("Plant Deleted");
-        refreshStudent();
-      })
-      .catch((err) => {
-        console.log(err, "Failed to delete Plant);
-      });
-  };
+  axiosWithAuth()
+    .delete(`/api/plants/${id}`)
+    .then((res) => {
+      console.log("Plant Deleted");
+      refreshStudent();
+    })
+    .catch((err) => {
+      console.log(err, "Failed to delete Plant");
+    });
+};
+
+const finalizeProject = (id, refreshPlant, plant, toggleEdit, edit) => {
+  axiosWithAuth()
+    .put(`/api/plants/${id}`, plant)
+    .then((res) => {
+      console.log("Plant Edited");
+      toggleEdit(!edit);
+      refreshPlant();
+    })
+    .catch((err) => {
+      console.log(err, "Failed to edit plant");
+    });
+};
+
+const PlantCard = ({ plant, refreshPlant }) => {
+  const [edit, toggleEdit] = useState(false);
+  const { register, handleSubmit, errors } = useForm();
+  const onSubmit = (data) =>
+    finalizeProject(plant.id, refreshPlant, data, toggleEdit, edit);
+  console.log(errors);
+
+  return edit === false ? (
+    <div>
+      <h2>
+        {plant.title} {plant.description} {plant.tried} {plant.category}
+      </h2>
+      <button onClick={() => deletePlant(plant.id, refreshPlant)}>
+        Delete
+      </button>
+      <button onClick={() => toggleEdit(!edit)}>Edit</button>
+    </div>
+  ) : (
+    <div>
+      <PlantBox>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <PlantInput>
+            <input
+              className=" forms"
+              type="text"
+              placeholder="Title"
+              name="Title"
+              ref={register({ required: true, min: 2, maxLength: 80 })}
+            />
+            <textarea
+              name="Description"
+              placeholder="Description"
+              ref={register({ required: true, max: 2, maxLength: 300 })}
+            />
+            <input
+              className=" forms"
+              type="text"
+              placeholder="Tried"
+              name="Tried"
+              ref={register({
+                required: true,
+                min: 2,
+                maxLength: 128,
+              })}
+            />
+            <input
+              className=" forms"
+              type="text"
+              placeholder="Category"
+              name="Category"
+              ref={register({ required: true, min: 2, maxLength: 128 })}
+            />
+
+            <Button className="forms" type="submit">
+              Submit
+            </Button>
+          </PlantInput>
+        </form>
+      </PlantBox>
+
+      <button onClick={() => toggleEdit(!edit)}>Cancel</button>
+    </div>
+  );
+};
+
+export default PlantCard;
